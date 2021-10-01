@@ -2073,6 +2073,10 @@ void
 gdk_surface_set_color_space (GdkSurface    *self,
                              GdkColorSpace *color_space)
 {
+  /* This way we support unsetting, too */
+  if (GDK_DISPLAY_DEBUG_CHECK (self->display, SRGB))
+    color_space = gdk_color_space_get_srgb ();
+
   if (gdk_color_space_equal (self->color_space, color_space))
     return;
 
