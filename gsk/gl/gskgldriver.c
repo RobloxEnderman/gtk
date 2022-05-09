@@ -1542,8 +1542,10 @@ create_texture_from_texture_destroy (gpointer data)
 }
 
 GdkTexture *
-gsk_gl_driver_create_gdk_texture (GskGLDriver *self,
-                                  guint        texture_id)
+gsk_gl_driver_create_gdk_texture (GskGLDriver       *self,
+                                  guint              texture_id,
+                                  GdkGLTextureFlags  flags,
+                                  GdkColorSpace     *color_space)
 {
   GskGLTextureState *state;
   GskGLTexture *texture;
@@ -1571,10 +1573,12 @@ gsk_gl_driver_create_gdk_texture (GskGLDriver *self,
   texture->texture_id = 0;
   gsk_gl_texture_free (texture);
 
-  return gdk_gl_texture_new (self->command_queue->context,
-                             texture_id,
-                             width,
-                             height,
-                             create_texture_from_texture_destroy,
-                             state);
+  return gdk_gl_texture_new_with_color_space (self->command_queue->context,
+                                              texture_id,
+                                              width,
+                                              height,
+                                              flags,
+                                              color_space,
+                                              create_texture_from_texture_destroy,
+                                              state);
 }
