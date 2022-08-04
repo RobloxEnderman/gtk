@@ -61,11 +61,28 @@ add_project_arguments('-D_GNU_SOURCE', language: 'c')
 # cast checks. We have a non-production (debug) build if debug is true and if
 # optimization is 0 or g; otherwise, we have a production build.
 gtk_debug_cflags = []
+gtk_debug = get_option('gtk_debug')
 optimized_build = get_option('optimization') not in [ '0', 'g' ]
-if get_option('debug') and not optimized_build
-  gtk_debug_cflags += ['-DG_ENABLE_DEBUG', '-DG_ENABLE_CONSISTENCY_CHECKS']
+debug_build = get_option('debug') and not optimized_build
+
+if gtk_debug.enabled() or (gtk_debug.auto() and debug_build)
+  gtk_debug_cflags += ['-DG_ENABLE_DEBUG']
 elif optimized_build
-  gtk_debug_cflags += ['-DG_DISABLE_CAST_CHECKS', '-DG_DISABLE_ASSERT']
+  gtk_debug_cflags += ['-DG_DISABLE_CAST_CHECKS']
+endif
+
+gtk_assert = get_option('gtk_assert')
+if gtk_assert.disabled() or (gtk_assert.auto() and not debug_build)
+  gtk_debug_cflags += ['-DG_DISABLE_ASSERT']
+endif
+
+if get_option('gtk_checks').disabled()
+  gtk_debug_cflags += ['-DG_DISABLE_CHECKS']
+endif
+
+gtk_consistency_checks = get_option('gtk_consistency_checks')
+if gtk_consistency_checks.enabled() or (gtk_consistency_checks.auto() and debug_build)
+  gtk_debug_cflags += ['-DG_ENABLE_CONSISTENCY_CHECKS']
 endif
 
 add_project_arguments(gtk_debug_cflags, language: 'c')

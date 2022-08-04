@@ -128,3 +128,25 @@ option('install-tests',
        type: 'boolean',
        value: false,
        description : 'Install tests')
+
+# Diagnostics and performance
+
+option('gtk_debug',
+       type : 'feature',
+       value : 'auto',
+       description : 'Enable GTK debug infrastructure')
+
+option('gtk_assert',
+       type : 'feature',
+       value : 'auto',
+       description : 'Enable assertions')
+
+option('gtk_checks',
+       type : 'feature',
+       value : 'enabled',
+       description : 'Enable extra checks such as API guards')
+
+option('gtk_consistency_checks',
+       type : 'feature',
+       value : 'auto',
+       description : 'Enable extra internal consistency checks')

@@ -95,6 +95,10 @@ applications, as they include additional validation of the internal state.
 The `debugoptimized` build type is the default for GTK if no build
 type is specified when calling *meson*.
 
+You may use the `glib_debug`, `gtk_assert`, `gtk_checks`, and
+`gtk_consistency_checks` build options if you wish to configure
+debugging features manually.
+
 ## Dependencies
 
 Before you can compile the GTK widget toolkit, you need to have
