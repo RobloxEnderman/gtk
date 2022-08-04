@@ -58,16 +58,13 @@ add_project_arguments('-DGTK_VERSION="@0@"'.format(meson.project_version()), lan
 add_project_arguments('-D_GNU_SOURCE', language: 'c')
 
 # Use debug/optimization flags to determine whether to enable debug or disable
-# cast checks
+# cast checks. We have a non-production (debug) build if debug is true and if
+# optimization is 0 or g; otherwise, we have a production build.
 gtk_debug_cflags = []
-debug = get_option('debug')
-optimization = get_option('optimization')
-if debug
-  gtk_debug_cflags += '-DG_ENABLE_DEBUG'
-  if optimization in ['0', 'g']
-    gtk_debug_cflags += '-DG_ENABLE_CONSISTENCY_CHECKS'
-  endif
-elif optimization in ['2', '3', 's']
+optimized_build = get_option('optimization') not in [ '0', 'g' ]
+if get_option('debug') and not optimized_build
+  gtk_debug_cflags += ['-DG_ENABLE_DEBUG', '-DG_ENABLE_CONSISTENCY_CHECKS']
+elif optimized_build
   gtk_debug_cflags += ['-DG_DISABLE_CAST_CHECKS', '-DG_DISABLE_ASSERT']
 endif
 
